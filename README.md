@@ -14,52 +14,78 @@ Linux GUI for maintaining your bootloader and initramfs.
 
 ## Requirements
 
+The runtime installer/app needs:
+
 - `love` (LÖVE; used to run the GUI)
 - `pkexec` (polkit; for privileged maintenance actions)
-- `rsync` (used by the installer script)
+- `rsync` (used by `installer.sh`)
 
-## Install
+## Install (most common)
+
+This installs the LÖVE app bundle + a launcher script + a desktop entry.
+
+### 1) Clone the repo
+
+```bash
+git clone https://github.com/<YOUR_USERNAME>/skrato.git
+cd skrato
+```
+
+> If you don’t use GitHub, replace the clone URL with your source location.
+
+### 2) Install skrato
+
+From inside the repo directory (the one containing `installer.sh`):
 
 ```bash
 bash installer.sh
 ```
 
-Installs into:
+### 3) Where it installs
+
+After installation, skrato is placed in:
+
 - Application bundle: `~/.skrato/`
 - Launcher: `~/.local/bin/skrato`
 - Desktop entry: `~/.local/share/applications/skrato.desktop`
 
-If `~/.local/bin` is not in your PATH:
+If `~/.local/bin` is not in your PATH, add it:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-After changing PATH, log out/in or restart your shell.
+Then **log out/in** or restart your shell.
 
 ## Run
 
-From a terminal:
+### Option A: from a terminal
 
 ```bash
 skrato
 ```
 
-Or use your desktop launcher.
+### Option B: from the desktop launcher
+
+Use the app entry created at: `~/.local/share/applications/skrato.desktop`.
 
 ## Uninstall
+
+From anywhere (the uninstall command is a self-contained action):
 
 ```bash
 bash installer.sh uninstall
 ```
 
 Removes:
+
 - `~/.local/bin/skrato`
 - `~/.local/share/applications/skrato.desktop`
 - `~/.skrato/`
 
 ## Notes about what gets installed
 
-The installer copies the project files required to run the LÖVE app into `~/.skrato/`.
-It does **not** install compiled Rust build artifacts (`target/`).
+`installer.sh` copies only the project files required to run the LÖVE app into `~/.skrato/`.
+
+It does **not** install compiled Rust build artifacts (the `target/` directory).
 
