@@ -1,8 +1,6 @@
 package main
 
 import (
-	"sync"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -12,7 +10,6 @@ import (
 type SkratoApp struct {
 	scanner  *Scanner
 	jobs     *JobManager
-	wg       sync.WaitGroup
 
 	statusLabel *widget.Label
 	lastLabel   *widget.Label

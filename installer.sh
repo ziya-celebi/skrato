@@ -46,7 +46,7 @@ fi
 # ============================================================
 require_cmd pkexec
 
-# We install the prebuilt Go binary into ~/.skrato.
+# Build and install the Go binary into ~/.skrato.
 # installer.sh can build it if missing, so rsync/love are not required at runtime.
 
 # Optional build step: if the binary isn't present, build it.

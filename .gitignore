@@ -1,7 +1,8 @@
-/target/
+# Go artifacts
 /go.sum
-**/target/
-Cargo.lock
+/bin/
+/*.exe
+*.test
 
 # IDE
 .vscode/
@@ -12,7 +13,3 @@ Cargo.lock
 
 # OS
 Thumbs.db
-
-# Rust misc
-**/*.rs.bk
-
