@@ -6,11 +6,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: arch based
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      - name: Build
-        run: cargo build --verbose
+      - name: Build (release)
+        run: cargo build --release --verbose
+
 

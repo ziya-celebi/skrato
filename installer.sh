@@ -44,32 +44,41 @@ fi
 # ============================================================
 # Install
 # ============================================================
-require_cmd love
 require_cmd pkexec
-require_cmd rsync
+
+# We install the prebuilt Rust binary (release mode) into ~/.skrato.
+# installer.sh can build it if missing, so rsync/love are not required at runtime.
+
+# Optional build step: if the release binary isn't present, build it.
+
 
 mkdir -p "$TARGET_DIR" "$LAUNCHER_DIR" "$DESKTOP_DIR"
 
-# Copy only what LÖVE needs to run.
-# Exclude Rust build artifacts and source.
-# NOTE: Copy happens from the script's current working directory.
-rsync -a --delete \
-  --exclude '/target/' \
-  --exclude '/.git/' \
-  --exclude '/Cargo.toml' \
-  --exclude '/Cargo.lock' \
-  --exclude '/src/' \
-  --exclude '/installer.sh' \
-  --exclude '/README.md' \
-  --exclude '/TODO.md' \
-  ./ "$TARGET_DIR"/
+BIN_NAME="skrato"
+RELEASE_BIN="$(pwd)/target/release/$BIN_NAME"
 
-# Launcher: run the installed LÖVE app bundle.
+# Build release binary if missing
+if [[ ! -f "$RELEASE_BIN" ]]; then
+  echo "Release binary not found at $RELEASE_BIN. Building with cargo..."
+  cargo build --release
+fi
+
+if [[ ! -f "$RELEASE_BIN" ]]; then
+  echo "Expected release binary not found: $RELEASE_BIN" >&2
+  exit 1
+fi
+
+# Install binary
+cp -f "$RELEASE_BIN" "$TARGET_DIR/$BIN_NAME"
+chmod 0755 "$TARGET_DIR/$BIN_NAME"
+
+# Launcher: run the installed Rust binary.
 cat >"$LAUNCHER" <<EOF
 #!/usr/bin/env bash
-exec love "$TARGET_DIR" "\$@"
+exec "$TARGET_DIR/$BIN_NAME" "\$@"
 EOF
 chmod 0755 "$LAUNCHER"
+
 
 # Desktop entry (icon optional)
 ICON_PATH="$TARGET_DIR/icon.png"
@@ -89,6 +98,7 @@ $ICON_LINE
 Terminal=false
 Categories=System;
 EOF
+
 chmod 0644 "$DESKTOP_FILE"
 
 echo "Installed skrato to:"

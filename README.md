@@ -14,15 +14,15 @@ Linux GUI for maintaining your bootloader and initramfs.
 
 ## Requirements
 
-The runtime installer/app needs:
-
-- `love` (LÖVE; used to run the GUI)
 - `pkexec` (polkit; for privileged maintenance actions)
-- `rsync` (used by `installer.sh`)
+
+> `installer.sh` builds and installs a **release Rust binary**; no `love`/Lua runtime is required.
+
 
 ## Install (most common)
 
-This installs the LÖVE app bundle + a launcher script + a desktop entry.
+This installs a release Rust binary + a launcher script + a desktop entry.
+
 
 ### 1) Clone the repo
 
@@ -85,7 +85,6 @@ Removes:
 
 ## Notes about what gets installed
 
-`installer.sh` copies only the project files required to run the LÖVE app into `~/.skrato/`.
+`installer.sh` installs the compiled release binary into `~/.skrato/` (and does not require any LÖVE/Lua runtime).
 
-It does **not** install compiled Rust build artifacts (the `target/` directory).
 
