@@ -27,7 +27,7 @@ This installs a release Rust binary + a launcher script + a desktop entry.
 ### 1) Clone the repo
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/skrato.git
+git clone https://github.com/ziya-celebi/skrato.git
 cd skrato
 ```
 
@@ -85,6 +85,6 @@ Removes:
 
 ## Notes about what gets installed
 
-`installer.sh` installs the compiled release binary into `~/.skrato/` (and does not require any LÖVE/Lua runtime).
+`installer.sh` installs the compiled release binary into `~/.skrato/`.
 
 
