@@ -46,33 +46,33 @@ fi
 # ============================================================
 require_cmd pkexec
 
-# We install the prebuilt Rust binary (release mode) into ~/.skrato.
+# We install the prebuilt Go binary into ~/.skrato.
 # installer.sh can build it if missing, so rsync/love are not required at runtime.
 
-# Optional build step: if the release binary isn't present, build it.
+# Optional build step: if the binary isn't present, build it.
 
 
 mkdir -p "$TARGET_DIR" "$LAUNCHER_DIR" "$DESKTOP_DIR"
 
 BIN_NAME="skrato"
-RELEASE_BIN="$(pwd)/target/release/$BIN_NAME"
+BUILT_BIN="$(pwd)/$BIN_NAME"
 
-# Build release binary if missing
-if [[ ! -f "$RELEASE_BIN" ]]; then
-  echo "Release binary not found at $RELEASE_BIN. Building with cargo..."
-  cargo build --release
+# Build binary if missing
+if [[ ! -f "$BUILT_BIN" ]]; then
+  echo "Binary not found at $BUILT_BIN. Building with go..."
+  go build -o "$BIN_NAME"
 fi
 
-if [[ ! -f "$RELEASE_BIN" ]]; then
-  echo "Expected release binary not found: $RELEASE_BIN" >&2
+if [[ ! -f "$BUILT_BIN" ]]; then
+  echo "Expected binary not found: $BUILT_BIN" >&2
   exit 1
 fi
 
 # Install binary
-cp -f "$RELEASE_BIN" "$TARGET_DIR/$BIN_NAME"
+cp -f "$BUILT_BIN" "$TARGET_DIR/$BIN_NAME"
 chmod 0755 "$TARGET_DIR/$BIN_NAME"
 
-# Launcher: run the installed Rust binary.
+# Launcher: run the installed Go binary.
 cat >"$LAUNCHER" <<EOF
 #!/usr/bin/env bash
 exec "$TARGET_DIR/$BIN_NAME" "\$@"

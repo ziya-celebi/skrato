@@ -16,12 +16,12 @@ Linux GUI for maintaining your bootloader and initramfs.
 
 - `pkexec` (polkit; for privileged maintenance actions)
 
-> `installer.sh` builds and installs a **release Rust binary**; no `love`/Lua runtime is required.
+> `installer.sh` builds and installs a **Go binary**; no Rust toolchain is required.
 
 
 ## Install (most common)
 
-This installs a release Rust binary + a launcher script + a desktop entry.
+This installs a Go binary + a launcher script + a desktop entry.
 
 
 ### 1) Clone the repo
@@ -85,6 +85,6 @@ Removes:
 
 ## Notes about what gets installed
 
-`installer.sh` installs the compiled release binary into `~/.skrato/`.
+`installer.sh` installs the compiled Go binary into `~/.skrato/`.
 
 
