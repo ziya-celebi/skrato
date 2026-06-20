@@ -8,11 +8,11 @@ import (
 )
 
 type SkratoApp struct {
-	scanner  *Scanner
-	jobs     *JobManager
+	scanner *Scanner
+	jobs    *JobManager
 
-	statusLabel *widget.Label
-	lastLabel   *widget.Label
+	statusLabel  *widget.Label
+	lastLabel    *widget.Label
 	detectedList *widget.Label
 
 	status     string
