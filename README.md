@@ -1,11 +1,22 @@
 # skrato
 
-Linux utility (GUI) for maintaining bootloader + initramfs.
+Linux GUI for maintaining your bootloader and initramfs.
+
+## What it does
+
+- Detects available maintenance tools on your system.
+- Can update:
+  - GRUB (`grub-mkconfig` / `grub2-mkconfig`)
+  - systemd-boot (`bootctl update`)
+  - rEFInd (`refind-install`)
+  - initramfs (`mkinitcpio` / `dracut` / `update-initramfs`)
+- Executes maintenance commands via `pkexec`.
 
 ## Requirements
 
-- `love` (LÖVE 11.x)
-- `pkexec` (polkit)
+- `love` (LÖVE; used to run the GUI)
+- `pkexec` (polkit; for privileged maintenance actions)
+- `rsync` (used by the installer script)
 
 ## Install
 
@@ -13,38 +24,42 @@ Linux utility (GUI) for maintaining bootloader + initramfs.
 bash installer.sh
 ```
 
-This installs into:
-- `~/.skrato/`
-- launcher: `~/.local/bin/skrato`
-- desktop entry: `~/.local/share/applications/skrato.desktop`
+Installs into:
+- Application bundle: `~/.skrato/`
+- Launcher: `~/.local/bin/skrato`
+- Desktop entry: `~/.local/share/applications/skrato.desktop`
 
-Make sure `~/.local/bin` is in your PATH (once):
+If `~/.local/bin` is not in your PATH:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-Log out/in or reload your shell after changing PATH.
+After changing PATH, log out/in or restart your shell.
 
 ## Run
+
+From a terminal:
 
 ```bash
 skrato
 ```
 
-## What it does
-
-- Detects available maintenance tools on your system.
-- Updates GRUB (`grub-mkconfig` / `grub2-mkconfig`) when present.
-- Updates systemd-boot (`bootctl update`) when present.
-- Refreshes rEFInd (`refind-install`) when present.
-- Rebuilds initramfs (`mkinitcpio`, `dracut`, or `update-initramfs`) when present.
-
-Maintenance commands are executed via `pkexec`.
+Or use your desktop launcher.
 
 ## Uninstall
 
 ```bash
 bash installer.sh uninstall
 ```
+
+Removes:
+- `~/.local/bin/skrato`
+- `~/.local/share/applications/skrato.desktop`
+- `~/.skrato/`
+
+## Notes about what gets installed
+
+The installer copies the project files required to run the LÖVE app into `~/.skrato/`.
+It does **not** install compiled Rust build artifacts (`target/`).
 

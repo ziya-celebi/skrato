@@ -14,7 +14,7 @@ ACTION="${1:-install}"
 case "$ACTION" in
   install|uninstall) ;;
   -h|--help) usage; exit 0 ;;
-  *) echo "Unknown action: $ACTION"; usage; exit 1 ;;
+  *) echo "Unknown action: $ACTION" >&2; usage; exit 1 ;;
 esac
 
 HOME_DIR="${HOME}"
@@ -35,8 +35,9 @@ require_cmd() {
 # Uninstall
 # ============================================================
 if [[ "$ACTION" == "uninstall" ]]; then
-  rm -f "$LAUNCHER" "$DESKTOP_FILE" || true
-  rm -rf "$TARGET_DIR" || true
+  rm -f "$LAUNCHER" "$DESKTOP_FILE" 2>/dev/null || true
+  rm -rf "$TARGET_DIR" 2>/dev/null || true
+  echo "Uninstalled skrato (removed $TARGET_DIR, $LAUNCHER, $DESKTOP_FILE)."
   exit 0
 fi
 
@@ -44,13 +45,14 @@ fi
 # Install
 # ============================================================
 require_cmd love
-# pkexec is required for actions inside the app; fail early with a clear message.
 require_cmd pkexec
+require_cmd rsync
 
 mkdir -p "$TARGET_DIR" "$LAUNCHER_DIR" "$DESKTOP_DIR"
 
-# Copy only what LÖVE needs to run (avoid copying Rust build/targets).
-# This keeps the install small and reliable.
+# Copy only what LÖVE needs to run.
+# Exclude Rust build artifacts and source.
+# NOTE: Copy happens from the script's current working directory.
 rsync -a --delete \
   --exclude '/target/' \
   --exclude '/.git/' \
@@ -58,16 +60,18 @@ rsync -a --delete \
   --exclude '/Cargo.lock' \
   --exclude '/src/' \
   --exclude '/installer.sh' \
-  ./* "$TARGET_DIR"/
+  --exclude '/README.md' \
+  --exclude '/TODO.md' \
+  ./ "$TARGET_DIR"/
 
-# Launcher
+# Launcher: run the installed LÖVE app bundle.
 cat >"$LAUNCHER" <<EOF
 #!/usr/bin/env bash
 exec love "$TARGET_DIR" "\$@"
 EOF
 chmod 0755 "$LAUNCHER"
 
-# Desktop entry (Icon optional)
+# Desktop entry (icon optional)
 ICON_PATH="$TARGET_DIR/icon.png"
 if [[ -f "$ICON_PATH" ]]; then
   ICON_LINE="Icon=$ICON_PATH"
@@ -79,7 +83,7 @@ cat >"$DESKTOP_FILE" <<EOF
 [Desktop Entry]
 Type=Application
 Name=skrato
-Comment=Refresh GRUB and Initramfs
+Comment=Maintain bootloader and initramfs
 Exec=$LAUNCHER
 $ICON_LINE
 Terminal=false
@@ -87,14 +91,9 @@ Categories=System;
 EOF
 chmod 0644 "$DESKTOP_FILE"
 
-cat <<EOF
-Installed skrato to:
-- $TARGET_DIR
-- $LAUNCHER
-- $DESKTOP_FILE
-
-Run: $LAUNCHER
-EOF
-
-
+echo "Installed skrato to:"
+echo "- $TARGET_DIR"
+echo "- $LAUNCHER"
+echo "- $DESKTOP_FILE"
+echo "Run: $LAUNCHER"
 
